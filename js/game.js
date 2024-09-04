@@ -21,6 +21,7 @@ const gGame = {
     secsPassed: 0 //TODO
     //* secsPassed: How many seconds passed 
 }
+
 var gBoard //*A Matrix containing cell objects: Each cell:
 
 var gCells
@@ -34,6 +35,8 @@ function onInit() {//*This is called when page loads
     gBoard = buildBoard()
     renderBoard(gBoard)
     gGame.isOn = false
+    resetTimer()
+    hideGameOver()
 }
 
 function buildBoard() { //!DONE
@@ -114,16 +117,15 @@ function getCellAppearance(cell) {
 
 
 function onCellClicked(elCell, i, j) {
-
     //* Called when a cell is clicked
-
     if (!gGame.isOn) {
         addMins(i, j)
         setMinesNegsCount(gBoard)
         gGame.isOn = true
-    }
+        startTimer()
+    } 
     revealCellContent(elCell, i, j)//TODO
-
+    if(checkGameOver(gBoard)) showGameOver(true)
 }
 
 function addMins( i, j) {
@@ -155,12 +157,65 @@ function revealCellContent(elCell, i, j) {
     gBoard[i][j].isShown = true
     gGame.shownCount++ // TODO
     renderBoard(gBoard)
-    if(gBoard[i][j].isMine) boom() //TODO
+    if(gBoard[i][j].isMine) boom(gBoard[i][j]) //TODO
     if(!gBoard[i][j].minesAroundCount) expandShown(gBoard, elCell, i, j)
 }
 
-function boom(){//TODO
+function boom(cell){//TODO
+    //TODO check hits
+    // when clicking a mine, all the mines are revealed
+    revealMines(gBoard)
+    // stop timer
+    pauseTimer()
+    // show modal "game over"
+    showGameOver()
+    //TODO change emoji
+    updateRestartButtonEmoji()
+    // paint mine background red 
+    paintBoombedMineBackground(cell)
+}
 
+function updateRestartButtonEmoji(){
+var elRestartButton = document.querySelector(`.restart`)
+elRestartButton.innerText = '🤯'
+}
+
+function paintBoombedMineBackground(cell){//*paint mine background red 
+    console.log(cell)
+    const elCell = document.querySelector(`.cell-${cell.location.i}-${cell.location.j}`)
+    elCell.classList.add('bombed-cell')
+}
+
+function showGameOver(victory = false){//*handel modal "game over"
+    if(victory){
+        const  elGameOverImg = document.querySelector('.game-over-img')
+        elGameOverImg.src = "/img/victory.png"
+    }
+    const elGameOver = document.querySelector('.game_over')
+    elGameOver.classList.remove('hide')
+    
+}
+
+function pauseTimer(){
+    gGame.secsPassed = stopTimer()
+}
+
+function hideGameOver(){//*handel modal "game over"
+    const elGameOver = document.querySelector('.game_over')
+    elGameOver.classList.add('hide')
+    gGame.secsPassed = stopTimer()
+}
+
+
+function revealMines(board){
+    // * when clicking a mine, all the mines are revealed
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[0].length; j++) {
+            board[i][j].isShown = board[i][j].isMine
+        }
+    }
+    //TODO add / remove classes 
+    renderBoard(board)
 }
 
 function onCellMarked(elCell,event,i,j) {
@@ -176,6 +231,8 @@ function onCellMarked(elCell,event,i,j) {
     
    //Todo add and remove class
 
+   if(checkGameOver(gBoard)) showGameOver(true)
+
 }
 
 function renderCell(location, value) {
@@ -186,13 +243,26 @@ function renderCell(location, value) {
 
 
 
-function checkGameOver() {
+function checkGameOver(board) {
+
     //* Game ends when all mines are marked, and all the other cells are shown
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[0].length; j++) {
+            if(board[i][j].isMine && !board[i][j].isMarked) return false
+            if(!board[i][j].isMine && !board[i][j].isShown) return false  
+        }
+    }
+    return true
+
+
     //     console.log('Game Over')
     //     TODO check hits num
     //     TODO clear timer
     //     TODO change Emoji
     //     gGame.isOn = false
+
+
+
 }
 
 function expandShown(board, elCell, i, j) { //!Should be a recursive function
@@ -218,5 +288,24 @@ function countNegs(cellI, cellJ, board) {
         }
     }
     return negsCount
+}
+
+function onLevelSelected(level){
+    switch(level){
+        case 'Beginner':
+            gLevel.SIZE = 4
+            gLevel.MINES = 2
+        break;
+        case 'Medium':
+            gLevel.SIZE = 8
+            gLevel.MINES = 14
+        break;
+        case 'Expert':
+            gLevel.SIZE = 12
+            gLevel.MINES = 32
+        break;
+    }
+    onInit()
+
 }
 

@@ -12,11 +12,22 @@
 <body onload="onInit()" onkeyup="onMouseClick(event)">
 
     <button class="restart" onclick="onInit()">😊</button>
-
+    <div id="timer">
+        <span id="minutes">00</span>:<span id="seconds">00</span>:<span id="milliseconds">000</span>
+    </div>
     <table class="board-container">
         <tbody class="board"></tbody>
     </table>
-
+    <div class="button-container">
+        <button class="button" onclick="onLevelSelected('Beginner')">Beginner</button>  
+        <button class="button"  onclick="onLevelSelected('Medium')">Medium</button> 
+        <button class="button"  onclick="onLevelSelected('Expert')">Expert</button>
+    </div>
+    <div class="game_over center ">
+        <img class="game-over-img" src="img/game-over.png" max-width=90% alt="">
+        
+    </div>
+    <div>Tomer Neeman</div>
     <script src="js/utils.js"></script>
     <script src="js/game.js"></script>
 </body>
