@@ -108,3 +108,9 @@ body {
 .button-container{
   margin: 20px;
 }
+
+.victory{
+  position: fixed;
+  inset: 0;
+  margin: 100px auto;
+}

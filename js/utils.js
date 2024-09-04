@@ -60,6 +60,10 @@ function resetTimer() {
     gTimerRunning = false
 }
 
+function pauseTimer(){
+    gGame.secsPassed = stopTimer()
+}
+
 function formatMilliseconds(time) {
     return time < 100 ? `0${time}`.slice(-3) : time
 }

@@ -3,6 +3,8 @@
 const MINE = '🎱'
 const MARKED = '🚩'
 const EMPTY = ''
+const SMILEY = '😊'
+const EXPLODING = '🤯'
 
 var gLevel = { //* This is an object by which the board size is set 
     //*(in this case: 4x4 board and how many mines to place)
@@ -18,7 +20,7 @@ const gGame = {
     //* shownCount: How many cells are shown
     markedCount: 0,
     //* markedCount: How many cells are marked (with a flag)
-    secsPassed: 0 //TODO
+    secsPassed: 0 
     //* secsPassed: How many seconds passed 
 }
 
@@ -37,6 +39,8 @@ function onInit() {//*This is called when page loads
     gGame.isOn = false
     resetTimer()
     hideGameOver()
+    hideVictory()
+    updateRestartButtonEmoji(SMILEY)
 }
 
 function buildBoard() { //!DONE
@@ -106,10 +110,11 @@ function getCellAppearance(cell) {
     
     if (!cell.isShown && !cell.isMarked) return EMPTY
     switch (true) {
-        case cell.isMine:
-            return MINE
+        
         case cell.isMarked:
             return MARKED
+        case cell.isMine:
+            return MINE
         default:
             return cell.minesAroundCount
     }
@@ -125,7 +130,7 @@ function onCellClicked(elCell, i, j) {
         startTimer()
     } 
     revealCellContent(elCell, i, j)//TODO
-    if(checkGameOver(gBoard)) showGameOver(true)
+    if(checkGameOver(gBoard)) showVictory()
 }
 
 function addMins( i, j) {
@@ -170,14 +175,14 @@ function boom(cell){//TODO
     // show modal "game over"
     showGameOver()
     //TODO change emoji
-    updateRestartButtonEmoji()
+    updateRestartButtonEmoji(EXPLODING)
     // paint mine background red 
     paintBoombedMineBackground(cell)
 }
 
-function updateRestartButtonEmoji(){
+function updateRestartButtonEmoji(emoji){
 var elRestartButton = document.querySelector(`.restart`)
-elRestartButton.innerText = '🤯'
+elRestartButton.innerText = emoji
 }
 
 function paintBoombedMineBackground(cell){//*paint mine background red 
@@ -186,18 +191,10 @@ function paintBoombedMineBackground(cell){//*paint mine background red
     elCell.classList.add('bombed-cell')
 }
 
-function showGameOver(victory = false){//*handel modal "game over"
-    if(victory){
-        const  elGameOverImg = document.querySelector('.game-over-img')
-        elGameOverImg.src = "/img/victory.png"
-    }
-    const elGameOver = document.querySelector('.game_over')
-    elGameOver.classList.remove('hide')
-    
-}
 
-function pauseTimer(){
-    gGame.secsPassed = stopTimer()
+function showGameOver(){//*handel modal "game over"    
+    const elGameOver = document.querySelector('.game_over')
+    elGameOver.classList.remove('hide')  
 }
 
 function hideGameOver(){//*handel modal "game over"
@@ -207,6 +204,17 @@ function hideGameOver(){//*handel modal "game over"
 }
 
 
+function showVictory(){//*handel modal "victory" 
+    const elGameOver = document.querySelector('.victory')
+    elGameOver.classList.remove('hide')  
+    gGame.secsPassed = stopTimer()
+}
+
+function hideVictory(){//*handel modal "victory"
+    const elGameOver = document.querySelector('.victory')
+    elGameOver.classList.add('hide')
+    
+}
 function revealMines(board){
     // * when clicking a mine, all the mines are revealed
     for (var i = 0; i < board.length; i++) {
@@ -226,12 +234,12 @@ function onCellMarked(elCell,event,i,j) {
     gBoard[i][j].isMarked = !gBoard[i][j].isMarked
     var isMarked = gBoard[i][j].isMarked
     isMarked ? gGame.markedCount++ : gGame.markedCount--
-    console.log('gGame.markedCount:', gGame.markedCount)
+    //console.log('gGame.markedCount:', gGame.markedCount)
     renderBoard(gBoard)
     
    //Todo add and remove class
 
-   if(checkGameOver(gBoard)) showGameOver(true)
+   if(checkGameOver(gBoard)) showVictory()
 
 }
 
