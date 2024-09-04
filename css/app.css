@@ -1,0 +1,37 @@
+:root {
+  --cell-background-color: #999;
+  --cell-border-color:#3e3d3d;
+}
+
+/* *{
+  box-sizing: border-box;
+} */
+
+body {
+  background-color: black;
+  color:white;
+  text-align: center;
+}
+.cell {
+  font-size: 1.5em;
+  width: 2em;
+  height: 2em;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--cell-background-color);
+  border: 1px solid var(--cell-border-color);
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 2px 2px;
+}
+
+.board-container {
+  margin: auto;
+}
+
+.restart{
+  background-color: transparent;
+  border: none;
+  font-size: xx-large;
+}
