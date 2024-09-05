@@ -27,6 +27,7 @@ body {
   cursor: pointer;
   user-select: none;
   box-shadow: 2px 2px;
+  
 }
 
 .board-container {
@@ -117,4 +118,12 @@ body {
 
 .count{
   margin: 10px;
+}
+
+.cell.highlighted{
+  border: 2px solid yellow;
+}
+
+.red, .red.button:hover  {
+  background-color: var(--bombed-cell-background-color);
 }

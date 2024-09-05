@@ -29,11 +29,48 @@
         <button class="button"  onclick="onLevelSelected('Medium')">Medium</button> 
         <button class="button"  onclick="onLevelSelected('Expert')">Expert</button>
     </div>
+    <div class="button-container">
+        <div>
+            <button class="button"  onclick="safeClick()">Safe Click</button> 
+            <div><span class="safe-click">3</span> clicks available</div> 
+        </div>
+        
+        <button class="button hint" onclick="onHintClicked(this)">💡   💡   💡</button> 
+        <button class="button"  onclick="exterminateMines()">MINE EXTERMINATOR 💥</button>
+    </div>
     <div class="game_over center ">
         <img class="game-over-img" src="img/game-over.png" max-width=90% alt="">
     </div>
     <div class="victory center hide">
         <img class="victory-img" src="img/victory.png" max-width=90% alt="">
+    </div>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Level</th>
+                    <th>Name</th>
+                    <th>Scores</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="level-beginner">
+                    <td>Beginner</td>
+                    <td class="name">120</td>
+                    <td class="score">230</td>
+                </tr>
+                <tr class="level-medium">
+                    <td>Medium</td>
+                    <td class="name">120</td>
+                    <td class="score">230</td>
+                </tr>
+                <tr class="level-expert">
+                    <td>Expert</td>
+                    <td class="name">120</td>
+                    <td class="score">230</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div>Tomer Neeman</div>
     <script src="js/utils.js"></script>
