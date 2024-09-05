@@ -1,5 +1,5 @@
 'use strict'
-   
+
 const MINE = '🎱'
 const MARKED = '🚩'
 const EMPTY = ''
@@ -20,8 +20,9 @@ const gGame = {
     //* shownCount: How many cells are shown
     markedCount: 0,
     //* markedCount: How many cells are marked (with a flag)
-    secsPassed: 0 
+    secsPassed: 0,
     //* secsPassed: How many seconds passed 
+    livesCount: 3
 }
 
 var gBoard //*A Matrix containing cell objects: Each cell:
@@ -41,10 +42,14 @@ function onInit() {//*This is called when page loads
     hideGameOver()
     hideVictory()
     updateRestartButtonEmoji(SMILEY)
+    updateShownCount(0)
+    updateMarkedCount(0)
+    gGame.livesCount = 3
+    updateLivesCount(gGame.livesCount)
 }
 
 function buildBoard() { //!DONE
-    //*Builds the board Set the mines Call setMinesNegsCount() 
+    //*Builds the board  
     //*Return the created board
     const size = gLevel.SIZE
     const board = []
@@ -63,13 +68,13 @@ function buildBoard() { //!DONE
     return board
 }
 
-function createCell(){ //!DONE
-    return { 
-        minesAroundCount: 0, 
-        isShown: false, 
-        isMine: false, 
+function createCell() { //!DONE
+    return {
+        minesAroundCount: 0,
+        isShown: false,
+        isMine: false,
         isMarked: false,
-        location: { } 
+        location: {}
     }
 }
 function setMinesNegsCount(board) { //!DONE
@@ -107,10 +112,10 @@ function renderBoard(board) {
 
 
 function getCellAppearance(cell) {
-    
+
     if (!cell.isShown && !cell.isMarked) return EMPTY
     switch (true) {
-        
+
         case cell.isMarked:
             return MARKED
         case cell.isMine:
@@ -128,26 +133,26 @@ function onCellClicked(elCell, i, j) {
         setMinesNegsCount(gBoard)
         gGame.isOn = true
         startTimer()
-    } 
+    }
     revealCellContent(elCell, i, j)//TODO
-    if(checkGameOver(gBoard)) showVictory()
+    if (checkGameOver(gBoard)) showVictory()
 }
 
-function addMins( i, j) {
+function addMins(i, j) {
     var minesLocation = []
-    for(var i=0; i< gCells.length; i++){
-        if(gCells[i].location.i === i && gCells[i].location.j === j ){
+    for (var i = 0; i < gCells.length; i++) {
+        if (gCells[i].location.i === i && gCells[i].location.j === j) {
             gCells.splice(i, 1)
         }
     }
-    for(var i = 0; i < gLevel.MINES; i++){
+    for (var i = 0; i < gLevel.MINES; i++) {
         minesLocation.push(drawCell().location)
     }
     console.log(minesLocation[0].i)
-    for(var idx = 0; idx<minesLocation.length; idx++){
+    for (var idx = 0; idx < minesLocation.length; idx++) {
         var i = minesLocation[idx].i
         var j = minesLocation[idx].j
-        gBoard[i][j].isMine = true  
+        gBoard[i][j].isMine = true
     }
     renderBoard(gBoard)
 }
@@ -157,89 +162,105 @@ function drawCell() {
     return gCells.splice(idx, 1)[0];
 }
 
-function revealCellContent(elCell, i, j) {  
+
+function revealCellContent(elCell, i, j) {
     // Todo add and remove class from elCell
-    gBoard[i][j].isShown = true
-    gGame.shownCount++ // TODO
+
+    if (gBoard[i][j].isMine) {
+        boom(gBoard[i][j]) //TODO
+    } else {
+        expandShown(gBoard, elCell, i, j)
+    }
+
     renderBoard(gBoard)
-    if(gBoard[i][j].isMine) boom(gBoard[i][j]) //TODO
-    if(!gBoard[i][j].minesAroundCount) expandShown(gBoard, elCell, i, j)
 }
 
-function boom(cell){//TODO
+
+function boom(cell) {//TODO
     //TODO check hits
-    // when clicking a mine, all the mines are revealed
-    revealMines(gBoard)
-    // stop timer
-    pauseTimer()
-    // show modal "game over"
-    showGameOver()
-    //TODO change emoji
-    updateRestartButtonEmoji(EXPLODING)
+    gGame.livesCount--
+    updateLivesCount(gGame.livesCount)
+    console.log(gGame.livesCount)
+    if (gGame.livesCount === 0) {
+        // show modal "game over"
+        showGameOver()
+        //change emoji
+        updateRestartButtonEmoji(EXPLODING)
+        // when clicking a mine, all the mines are revealed
+        revealMines(gBoard)
+        // stop timer
+        pauseTimer()
+    }
+
     // paint mine background red 
     paintBoombedMineBackground(cell)
 }
 
-function updateRestartButtonEmoji(emoji){
-var elRestartButton = document.querySelector(`.restart`)
-elRestartButton.innerText = emoji
+function updateRestartButtonEmoji(emoji) {
+    var elRestartButton = document.querySelector(`.restart`)
+    elRestartButton.innerText = emoji
 }
 
-function paintBoombedMineBackground(cell){//*paint mine background red 
+function paintBoombedMineBackground(cell) {//*paint mine background red 
     console.log(cell)
-    const elCell = document.querySelector(`.cell-${cell.location.i}-${cell.location.j}`)
-    elCell.classList.add('bombed-cell')
+    // const elCell = document.querySelector(`.cell-${cell.location.i}-${cell.location.j}`)
+    // elCell.classList.add('bombed-cell')
+    gBoard[cell.location.i][cell.location.j].isShown = true
 }
 
 
-function showGameOver(){//*handel modal "game over"    
+function showGameOver() {//*handel modal "game over"    
     const elGameOver = document.querySelector('.game_over')
-    elGameOver.classList.remove('hide')  
+    elGameOver.classList.remove('hide')
 }
 
-function hideGameOver(){//*handel modal "game over"
+function hideGameOver() {//*handel modal "game over"
     const elGameOver = document.querySelector('.game_over')
     elGameOver.classList.add('hide')
     gGame.secsPassed = stopTimer()
 }
 
 
-function showVictory(){//*handel modal "victory" 
+function showVictory() {//*handel modal "victory" 
     const elGameOver = document.querySelector('.victory')
-    elGameOver.classList.remove('hide')  
+    elGameOver.classList.remove('hide')
     gGame.secsPassed = stopTimer()
 }
 
-function hideVictory(){//*handel modal "victory"
+function hideVictory() {//*handel modal "victory"
     const elGameOver = document.querySelector('.victory')
     elGameOver.classList.add('hide')
-    
+
 }
-function revealMines(board){
+function revealMines(board) {
     // * when clicking a mine, all the mines are revealed
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[0].length; j++) {
             board[i][j].isShown = board[i][j].isMine
+            if(board[i][j].isMine){
+                const elCell = document.querySelector(`.cell-${i}-${j}`)
+                elCell.classList.add('bombed-cell')
+            }
         }
     }
     //TODO add / remove classes 
     renderBoard(board)
 }
 
-function onCellMarked(elCell,event,i,j) {
+function onCellMarked(elCell, event, i, j) {
     //* Called when a cell is right- 
     //*clicked See how you can hide the context menu on right click
     event.preventDefault()
-    
+
     gBoard[i][j].isMarked = !gBoard[i][j].isMarked
     var isMarked = gBoard[i][j].isMarked
     isMarked ? gGame.markedCount++ : gGame.markedCount--
-    //console.log('gGame.markedCount:', gGame.markedCount)
+    updateMarkedCount(gGame.markedCount)
     renderBoard(gBoard)
-    
-   //Todo add and remove class
 
-   if(checkGameOver(gBoard)) showVictory()
+    //Todo add and remove class
+
+    if (checkGameOver(gBoard)) showVictory()
 
 }
 
@@ -256,33 +277,38 @@ function checkGameOver(board) {
     //* Game ends when all mines are marked, and all the other cells are shown
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[0].length; j++) {
-            if(board[i][j].isMine && !board[i][j].isMarked) return false
-            if(!board[i][j].isMine && !board[i][j].isShown) return false  
+            if (board[i][j].isMine && !board[i][j].isMarked) return false
+            if (!board[i][j].isMine && !board[i][j].isShown) return false
         }
     }
     return true
-
-
-    //     console.log('Game Over')
-    //     TODO check hits num
-    //     TODO clear timer
-    //     TODO change Emoji
-    //     gGame.isOn = false
-
-
-
 }
 
-function expandShown(board, elCell, i, j) { //!Should be a recursive function
+function expandShown(board, elCell, i, j) {
     //* When user clicks a cell with no mines around, 
     //*we need to open not only that cell, but also its neighbors.
 
-
-    //* NOTE: start with a basic implementation that only opens the 
-    //*non-mine 1st degree neighbors
-
     //* BONUS: if you have the time later, try to work more like the 
     //*real algorithm (see description at the Bonuses section below)
+    if (!board[i][j].isShown) {
+        board[i][j].isShown = true
+        gGame.shownCount++
+        updateShownCount(gGame.shownCount)
+    }
+    if (!countNegs(i, j, board)) {
+        console.log(countNegs(i, j, board))
+
+        for (var idxI = i - 1; idxI <= i + 1; idxI++) {
+            if (idxI < 0 || idxI >= board.length) continue
+            for (var idxJ = j - 1; idxJ <= j + 1; idxJ++) {
+                if (idxI === i && idxJ === j) continue
+                if (idxJ < 0 || idxJ >= board[idxI].length) continue
+                var elNegCell = document.querySelector(`.cell-${idxI}-${idxJ}`)
+                if (!board[idxI][idxJ].isShown) expandShown(board, elNegCell, idxI, idxJ)
+
+            }
+        }
+    } else return
 }
 
 function countNegs(cellI, cellJ, board) {
@@ -298,22 +324,36 @@ function countNegs(cellI, cellJ, board) {
     return negsCount
 }
 
-function onLevelSelected(level){
-    switch(level){
+function onLevelSelected(level) {
+    switch (level) {
         case 'Beginner':
             gLevel.SIZE = 4
             gLevel.MINES = 2
-        break;
+            break
         case 'Medium':
             gLevel.SIZE = 8
             gLevel.MINES = 14
-        break;
+            break
         case 'Expert':
             gLevel.SIZE = 12
             gLevel.MINES = 32
-        break;
+            break
     }
     onInit()
 
 }
 
+function updateShownCount(shownCount) {
+    const elShownCount = document.querySelector('.shown-count')
+    elShownCount.innerText = shownCount
+}
+
+function updateMarkedCount(markedCount) {
+    const elMarkedCount = document.querySelector('.marked-count')
+    elMarkedCount.innerText = markedCount
+}
+
+function updateLivesCount(livesCount) {
+    const elLivesCount = document.querySelector('.lives-count')
+    elLivesCount.innerText = livesCount
+}

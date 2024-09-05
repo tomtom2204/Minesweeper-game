@@ -12,9 +12,15 @@
 <body onload="onInit()" onkeyup="onMouseClick(event)">
 
     <button class="restart" onclick="onInit()">😊</button>
+    <div><span class="lives-count"></span>  LIVES LEFT</div>
     <div id="timer">
         <span id="minutes">00</span>:<span id="seconds">00</span>:<span id="milliseconds">000</span>
     </div>
+    <div >
+        <span class="count">Shown Count: <span class="shown-count"></span> </span>
+        <span class="count">Marked Count:<span class="marked-count"></span> </span> 
+    </div>
+
     <table class="board-container">
         <tbody class="board"></tbody>
     </table>
