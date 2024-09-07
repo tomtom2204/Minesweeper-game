@@ -60,7 +60,7 @@ function resetTimer() {
     gTimerRunning = false
 }
 
-function pauseTimer(){
+function pauseTimer() {
     gGame.secsPassed = stopTimer()
 }
 

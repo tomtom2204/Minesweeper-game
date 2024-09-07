@@ -1,129 +1,469 @@
 :root {
-  --body-background-color: black;
-  --body-color: white;
-  --cell-background-color: #999;
-  --cell-border-color: #3e3d3d;
-  --bombed-cell-background-color:red;
+    --body-background-color: #ffffff;
+    /* Light background */
+    --body-color: #ffffff;
+    /* Light text color */
+    --cell-background-color: rgba(0, 0, 0, 0.1);
+    --cell-border-color: #3e3d3d;
+    --bombed-cell-background-color: red;
+    --background-light: url('/img/game-background.webp');
+    --background-dark: url('/img/dark-game-background.jpg');
+    --modal-background-light: url('/img/modal-background.png');
+    --modal-background-dark: url('/img/dark-modal-background.png');
+    --timer-background-light: url('/img/timer-background.png');
+    --timer-background-dark: url('/img/dark-timer-background.png');
+    --info-background-light: url('/img/info-background.png');
+    --info-background-dark: url('/img/dark-info-background.png');
+    --board-background-light: url('/img/board-background.png');
+    --board-background-dark: url('/img/dark-board-background.png');
+    --covered-cell-light: url('/img/covered-cell.png');
+    --covered-cell-dark: url('/img/dark-covered-cell.png');
+
 }
 
-/* *{
-  box-sizing: border-box;
-} */
+[data-theme="light"] {
+    --body-background-color: #121212;
+    --background-body: var(--background-light);
+    --modal-background: var(--modal-background-light);
+    --timer-background: var(--timer-background-light);
+    --info-background: var(--info-background-light);
+    --board-background: var(--board-background-light);
+    --covered-cell: var(--covered-cell-light);
 
+    --side-button-border-color: #4db340;
+    --side-button-box-shadow-color: #1e7e34;
+    --side-button-background-color: #b4ee76;
+}
+
+[data-theme="dark"] {
+    --body-background-color: #121212;
+    /* Dark background */
+    --body-color: #ffffff;
+    /* Dark text color */
+    --cell-background-color: rgba(255, 255, 255, 0.1);
+    --cell-border-color: #606060;
+    --bombed-cell-background-color: #ff4444;
+    --background-body: var(--background-dark);
+    --info-background: var(--info-background-dark);
+    --modal-background: var(--modal-background-dark);
+    --timer-background: var(--timer-background-dark);
+    --board-background: var(--board-background-dark);
+    --covered-cell: var(--covered-cell-dark);
+
+    --side-button-border-color: #641e5a;
+    --side-button-box-shadow-color: #280025;
+    --side-button-background-color: #ca8fd4;
+}
+
+* {
+    font-family: 'Fredoka One', cursive;
+    font-weight: lighter;
+}
+
+/* Apply these colors */
 body {
-  background-color: var( --body-background-color);
-  color: var(--body-color);
-  text-align: center;
+    color: var(--body-color);
+    text-align: center;
+    background-color: var(--body-background-color);
+    color: var(--body-color);
+    background-image: var(--background-body);
+
+    background-size: cover;
+    /* Ensures the image covers the whole div */
+    background-position: center;
+    /* Centers the image in the div */
+    background-repeat: no-repeat;
+    /* Prevents the image from repeating */
+
 }
+
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    /* Spread divs across the width */
+    width: 100%;
+    /* Make sure container spans the full width of the screen */
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    /* Spread divs across the width */
+    width: 100%;
+    /* Make sure container spans the full width of the screen */
+}
+
 .cell {
-  font-size: 1.3em;
-  width: 2em;
-  height: 2em;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--cell-background-color);
-  border: 1px solid var(--cell-border-color);
-  font-weight: bold;
-  cursor: pointer;
-  user-select: none;
-  box-shadow: 2px 2px;
-  
+    background-color: var(--cell-background-color);
+    border-color: var(--cell-border-color);
+}
+
+.column {
+    text-align: center;
+    /* Optional: center content inside each div */
+}
+
+.side-panel {
+    height: 400px;
+    padding: auto;
+    padding-top: 20px;
+}
+
+.side-button {
+    width: 100px;
+    height: 90px;
+    border-radius: 50%;
+    border: solid 4px var(--side-button-border-color);
+    position: relative;
+    padding: auto;
+    padding-top: 10px;
+    box-shadow: 5px 5px var(--side-button-box-shadow-color);
+    background-color: var(--side-button-background-color);
+    margin: 15px;
+}
+
+.padding-5 img {
+    margin-top: 5px;
+}
+
+.counter {
+    font-size: 16px;
+    background-color: #ff0000;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: solid 1px red
+}
+
+.cell {
+    font-size: 1.3em;
+    width: 2em;
+    height: 2em;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 10px;
+    backdrop-filter: blur(20px);
+    background-color: var(--cell-background-color);
+}
+
+.covered-cell {
+    margin: auto;
+    min-width: 2em;
+    min-height: 2em;
+    background-image: var(--covered-cell);
+    background-size: cover;
+    /* Ensures the image covers the whole div */
+    background-position: center;
+    /* Centers the image in the div */
+    background-repeat: no-repeat;
+    /* Prevents the image from repeating */
+}
+
+.side-panel-button {
+    cursor: pointer;
 }
 
 .board-container {
-  margin: auto;
+    margin: auto;
+    padding-top: 50px;
 }
 
-.restart{
-  background-color: transparent;
-  border: none;
-  font-size: xx-large;
+.board-wrapper {
+    background-image: var(--board-background);
+    background-size: 455px 300px;
+    width: 455px;
+    height: 300px;
 }
 
-.game-over-img{
-  border-radius: 20px;
+.round-btn {
+    margin: auto;
+    width: 4em;
+    height: 4em;
+    background-image: url('/img/round-btn.png');
+    background-size: cover;
+    /* Ensures the image covers the whole div */
+    background-position: center;
+    /* Centers the image in the div */
+    background-repeat: no-repeat;
+    /* Prevents the image from repeating */
+    cursor: pointer;
+}
+
+.restart-button {
+    margin-left: 40px;
+}
+
+.game-over-img {
+    border-radius: 20px;
 }
 
 .hide {
-  display: none;
+    display: none;
 }
 
-.game_over{
-  /* position: fixed; */
-  inset: 0;
-  margin:  80px auto;
+.row {
+    display: flex;
+    justify-content: space-between;
 }
 
-.bombed-cell{
-  background-color: var(--bombed-cell-background-color);
+.modal-dialog {
+    position: absolute;
+    z-index: 99999;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0
+}
+
+.close-button {
+    position: absolute;
+    top: 60px;
+    right: 40px;
+    cursor: pointer;
+}
+
+.scores table {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 30px;
+}
+
+.scores th {
+    font-size: 25px;
+
+}
+
+.scores td {
+    font-weight: 100;
+    color: #f4f80a
+}
+
+.model-content {
+    position: absolute;
+    left: 40px;
+    top: 80px;
+}
+
+.modal-dialog h2 {
+    position: absolute;
+    left: 170px;
+    font-size: 25px;
+    color: #f4f80a
+}
+
+.settings-modal {
+    position: relative;
+    width: 450px;
+    height: 300px;
+    margin: 80px auto;
+    background-image: var(--modal-background);
+    background-size: 450px 300px;
+}
+
+.score-board-modal {
+    position: relative;
+    width: 450px;
+    height: 300px;
+    inset: 0;
+    margin: 80px auto;
+    background-image: var(--modal-background);
+    background-size: 450px 300px;
+}
+
+.bombed-cell {
+    background-color: var(--bombed-cell-background-color);
 }
 
 #timer {
-  font-size: 48px;
-  font-weight: bold;
-  margin-bottom: 20px;
+    font-size: 48px;
+    margin-bottom: 20px;
+    background-image: var(--timer-background);
+    background-size: 300px 60px;
+    width: 300px;
+    height: 60px;
+    margin: auto;
 }
 
-
-
-/*  */
 .button {
-  min-width: 140px;
-  padding: 15px 30px;
-  font-size: 15px;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #ffffff;
-  background-color: #28a745; /* Green color */
-  border: none;
-  border-radius: 10px;
-  box-shadow: 0 5px #1e7e34;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  outline: none;
-  margin: 5px;
+    color: #ffffff;
+    background-color: #7fd028;
+    /* Green color */
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 5px #1e7e34;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    margin: 5px;
 }
 
 .button:hover {
-  background-color: #218838;
-  box-shadow: 0 6px #1c7430;
-  transform: translateY(-2px);
+    background-color: #218838;
+    box-shadow: 0 6px #1c7430;
+    transform: translateY(-2px);
 }
 
-.active, .button:active {
-  background-color: #1e7232;
-  box-shadow: 0 5px #0a3b16;
-  transform: translateY(2.0px);
+.active,
+.button:active {
+    background-color: #6fb623;
+    transform: translateY(2.0px);
+    height: 100px;
+    width: 75px;
 }
 
 .button:focus {
-  outline: none;
+    outline: none;
 }
 
 .button:disabled {
-  background-color: #6c757d;
-  box-shadow: 0 5px #5a6268;
-  cursor: not-allowed;
+    background-color: #6c757d;
+    box-shadow: 0 5px #5a6268;
+    cursor: not-allowed;
 }
 
-.button-container{
-  margin: 20px;
+.button-container {
+    margin: 20px;
 }
 
-.victory{
-  position: fixed;
-  inset: 0;
-  margin: 100px auto;
+.victory {
+    position: fixed;
+    inset: 0;
+    margin: 100px auto;
 }
 
-.count{
-  margin: 10px;
+.count {
+    margin: 10px;
 }
 
-.cell.highlighted{
-  border: 2px solid yellow;
+.cell.highlighted {
+    border: 2px solid yellow;
 }
 
-.red, .red.button:hover  {
-  background-color: var(--bombed-cell-background-color);
+.red,
+.red.button:hover {
+    background-color: var(--bombed-cell-background-color);
+}
+
+.lives {
+    background-image: var(--info-background);
+    background-size: 200px 50px;
+    width: 200px;
+    height: 40px;
+    padding-top: 10px;
+}
+
+.safe-mode-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.safe-mode-bar {
+    width: 200px;
+    height: 20px;
+    background-color: #c0f58f;
+    transition: width 0.5s;
+    border-radius: 30px;
+    box-shadow: 5px 10px 10px #149733;
+    border: solid 1px #c5d8b5;
+    margin-top: 70px;
+}
+
+.safe-mode-bar-fill {
+    width: 0;
+    height: 100%;
+    background-color: #7fd028;
+    transition: width 0.5s;
+    border-radius: 40px;
+    text-align: center;
+}
+
+.side-panel-buttons {
+    position: relative;
+    width: 100px;
+}
+
+.grayscale-image,
+.deactivated {
+    filter: grayscale(100%);
+}
+
+.info {
+    position: absolute;
+    right: 5px;
+    font-size: 20px;
+    padding-top: 10px;
+    background-image: var(--info-background);
+    background-size: 300px 100px;
+    width: 300px;
+    height: 90px;
+    font-weight: bold;
+}
+
+footer {
+    margin-top: 180px;
+    color: #fff;
+    font-size: 55px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 14px;
+}
+
+
+/*  */
+#theme-toggle {
+    background-color: var(--side-button-border-color);
+    /* Default blue for light mode */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Dark mode styles */
+[data-theme="dark"] #theme-toggle {
+    background-color: #333;
+    /* Dark background for dark mode */
+    color: #eee;
+}
+
+/* Light mode styles */
+[data-theme="light"] #theme-toggle {
+    background-color: var(--side-button-border-color);
+    /* Blue background for light mode */
+    color: #fff;
+}
+
+/* Hover and focus states */
+#theme-toggle:hover,
+#theme-toggle:focus {
+    background-color: var(--side-button-border-color);
+    /* Darker shade of blue for hover/focus */
+    outline: none;
 }

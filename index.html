@@ -7,72 +7,165 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Mine Sweeper</title>
     <link rel="stylesheet" href="css/app.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 </head>
 
 <body onload="onInit()" onkeyup="onMouseClick(event)">
+    <div class="row">
+        <div class="column">
+            <div class="side-panel">
 
-    <button class="restart" onclick="onInit()">😊</button>
-    <div><span class="lives-count"></span>  LIVES LEFT</div>
-    <div id="timer">
-        <span id="minutes">00</span>:<span id="seconds">00</span>:<span id="milliseconds">000</span>
-    </div>
-    <div >
-        <span class="count">Shown Count: <span class="shown-count"></span> </span>
-        <span class="count">Marked Count:<span class="marked-count"></span> </span> 
-    </div>
+                <div class="side-button padding-5 " onclick="showScoreBoardModal()">
+                    <img src="/img/trophy-btn.png" class="side-panel-button" height="70" />
+                </div>
 
-    <table class="board-container">
-        <tbody class="board"></tbody>
-    </table>
-    <div class="button-container">
-        <button class="button" onclick="onLevelSelected('Beginner')">Beginner</button>  
-        <button class="button"  onclick="onLevelSelected('Medium')">Medium</button> 
-        <button class="button"  onclick="onLevelSelected('Expert')">Expert</button>
-    </div>
-    <div class="button-container">
-        <div>
-            <button class="button"  onclick="safeClick()">Safe Click</button> 
-            <div><span class="safe-click">3</span> clicks available</div> 
+                <div class="side-button padding-5 hint" onclick="onHintClicked(this)">
+                    <img src="/img/light-bulb-on.png" class="light-bulb side-panel-button deactivated" height="70" />
+                    <div class="counter hint-counter">
+                        3
+                    </div>
+                </div>
+
+                <div class="side-button padding-5" onclick="safeClick()" title="safe mode">
+                    <img src="/img/shield.png" height="80" class="shield side-panel-button deactivated" />
+                    <div class="counter shield-counter">
+                        3
+                    </div>
+                </div>
+
+                <div class="side-button" title="mine exterminator" onclick="exterminateMines()">
+                    <img src="/img/exterminator.png" height="101" style="margin-top: -5px;"
+                        class="side-panel-button exterminator deactivated">
+                    <div class="counter exterminator-counter">
+                        1
+                    </div>
+                </div>
+
+                <div class="side-button padding-5 hint" onclick="showSettingsModal()">
+                    <img src="/img/settings-btn.png" class="side-panel-button" height="70" />
+                </div>
+            </div>
         </div>
-        
-        <button class="button hint" onclick="onHintClicked(this)">💡   💡   💡</button> 
-        <button class="button"  onclick="exterminateMines()">MINE EXTERMINATOR 💥</button>
+
+
+
+        <div class="column">
+            <div class="center">
+
+                <div>
+                    <img src="/img/bomb-cute-empty.png" height="100" width="90" class="restart-button"
+                        onclick="onInit()" />
+                </div>
+
+                <div id="timer">
+                    <span id="minutes">00</span>:<span id="seconds">00</span>:<span id="milliseconds">000</span>
+                </div>
+
+                <div class="board-wrapper">
+                    <table class="board-container">
+                        <tbody class="board"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="column">
+            <div class="lives" title="lives"></div>
+        </div>
+
     </div>
-    <div class="game_over center ">
-        <img class="game-over-img" src="img/game-over.png" max-width=90% alt="">
+
+    <div class="info">
+        <div class="count">Shown Count: <span class="shown-count"></div> </span>
+        <div class="count">Marked Count: <span class="marked-count"></div> </span>
     </div>
+
     <div class="victory center hide">
-        <img class="victory-img" src="img/victory.png" max-width=90% alt="">
+        <img class="victory-img" src="img/victory2.png" width="500" max-width=90% alt="">
     </div>
-    <div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Level</th>
-                    <th>Name</th>
-                    <th>Scores</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="level-beginner">
-                    <td>Beginner</td>
-                    <td class="name">120</td>
-                    <td class="score">230</td>
-                </tr>
-                <tr class="level-medium">
-                    <td>Medium</td>
-                    <td class="name">120</td>
-                    <td class="score">230</td>
-                </tr>
-                <tr class="level-expert">
-                    <td>Expert</td>
-                    <td class="name">120</td>
-                    <td class="score">230</td>
-                </tr>
-            </tbody>
-        </table>
+
+
+
+    <div class="modal-dialog settings-modal-dialog hide">
+        <div class="settings-modal center">
+
+            <h2>Settings</h2>
+
+            <div class="model-content">
+                <div class="row" style="margin-left:20px;width: 300px; ">
+
+                    <div class="column">
+                        <button class="button Beginner active" onclick="onLevelSelected('Beginner')">
+                            <img src="img/level1.png" height="70" />
+                        </button>
+                    </div>
+
+                    <div class="column">
+                        <button class="button Medium" onclick="onLevelSelected('Medium')">
+                            <img src="img/level2.png" height="70" />
+                        </button>
+                    </div>
+
+                    <div class="column">
+                        <button class="button Expert" onclick="onLevelSelected('Expert')">
+                            <img src="img/level3.png" height="70" />
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="close-button" onclick="closeDialog('.settings-modal-dialog ')">X</div>
+        </div>
     </div>
-    <div>Tomer Neeman</div>
+
+    <div class="modal-dialog score-board-modal-dialog hide">
+        <div class="score-board-modal center">
+            <h2>Scores</h2>
+            <div class="model-content">
+                <div class="scores">
+                    <table width="300">
+                        <thead>
+                            <tr>
+                                <th>Level</th>
+                                <th>Name</th>
+                                <th>Scores</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="level-beginner">
+                                <th>Beginner</th>
+                                <td class="name">120</td>
+                                <td class="score">230</td>
+                            </tr>
+                            <tr class="level-medium">
+                                <th>Medium</th>
+                                <td class="name">120</td>
+                                <td class="score">230</td>
+                            </tr>
+                            <tr class="level-expert">
+                                <th>Expert</th>
+                                <td class="name">120</td>
+                                <td class="score">230</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="close-button" onclick="closeDialog('.score-board-modal-dialog')">X</div>
+        </div>
+
+    </div>
+    <footer>
+
+        <button id="theme-toggle">Switch Theme</button>
+        <div class="footer-bottom">
+            <p> © Tomer Neeman.</p>
+        </div>
+    </footer>
     <script src="js/utils.js"></script>
     <script src="js/game.js"></script>
 </body>
